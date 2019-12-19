@@ -5,6 +5,8 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ShardingUtil;
+import com.xxl.job.executor.core.robot.ReportRobot;
+import com.xxl.job.executor.service.impl.WXTemplateServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -44,6 +46,14 @@ public class SampleXxlJob {
         }
         return ReturnT.SUCCESS;
     }
+    @XxlJob("remindDrinkJobHandler")
+    public ReturnT<String> remindDrinkJobHandler(String param) throws Exception {
+        System.out.println("param:"+param);
+        new ReportRobot().sendText(param);
+
+        return ReturnT.SUCCESS;
+    }
+    
 
 
     /**

@@ -187,11 +187,25 @@ public class XxlJobTrigger {
 
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
-        System.out.println(triggerResult.getMsg());
-        if (jobLog.getHandleCode()!=200){
+        System.out.println(jobLog);
+
+        //1.先判断trigger_code，这是是否调度成功，失败则读取triggerResult
+        /*if(jobLog.getTriggerCode()==200){
+            logger.info("任务调度成功，id="+jobLog.getJobId());
+            //2.再判断handle_code，这是是否执行成功，失败则读取handle_msg
+            if (jobLog.getHandleCode()==200){
+                logger.info("任务执行成功，id="+jobLog.getJobId());
+            }else{
+                //发送到企业微信
+                new ReportRobot(jobLog).sendMDText("");
+            }
+        }else{
             //发送到企业微信
             new ReportRobot(jobLog).sendMDText(triggerResult.getMsg());
-        }
+
+        }*/
+
+
     }
 
     /**

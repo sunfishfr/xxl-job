@@ -42,14 +42,21 @@ public class ReportRobot {
     }
 
     public void sendMDText(String msg) {
-        int index = msg.lastIndexOf("：") +1;
-        //http://bj.96weixin.com/emoji/
-        //1.第一种情况：发送文本消息
-        vo.setContent("\uD83D\uDE41任务调度出错，状态码为：<font color=\\\"warning\\\">"+jobLog.getHandleCode()+"</font>，请相关同事注意。\n" +
-                ">错误信息：<font color=\\\"comment\\\">"+msg.substring(index)+"</font> \n" +
-                ">执行器地址：<font color=\\\"comment\\\">"+jobLog.getExecutorAddress()+"</font> \n" +
-                ">执行器名称：<font color=\\\"comment\\\">"+jobLog.getExecutorHandler()+"</font>");
-
+        if (msg.isEmpty()){
+            //调度失败
+            vo.setContent("\uD83D\uDE41任务<font color=\\\"info\\\">执行</font><font color=\\\"warning\\\">失败</font>，请注意。\n" +
+                    ">错误信息：<font color=\\\"comment\\\">"+jobLog.getHandleMsg()+"</font> \n" +
+                    ">执行器地址：<font color=\\\"comment\\\">"+jobLog.getExecutorAddress()+"</font> \n" +
+                    ">执行器名称：<font color=\\\"comment\\\">"+jobLog.getExecutorHandler()+"</font>");
+        }else {
+            //执行失败
+            int index = msg.lastIndexOf("：") +1;
+            //http://bj.96weixin.com/emoji/
+            vo.setContent("\uD83D\uDE1F任务<font color=\\\"info\\\">调度</font><font color=\\\"warning\\\">失败</font>，请注意。\n" +
+                    ">错误信息：<font color=\\\"comment\\\">"+msg.substring(index)+"</font> \n" +
+                    ">执行器地址：<font color=\\\"comment\\\">"+jobLog.getExecutorAddress()+"</font> \n" +
+                    ">执行器名称：<font color=\\\"comment\\\">"+jobLog.getExecutorHandler()+"</font>");
+        }
         vo.setMsgType("markdown");
         wxTemplateService.sendNews(vo);
     }
