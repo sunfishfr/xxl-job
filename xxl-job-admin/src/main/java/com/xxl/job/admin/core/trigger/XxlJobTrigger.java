@@ -1,12 +1,16 @@
 package com.xxl.job.admin.core.trigger;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.core.model.QiRobotVo;
+import com.xxl.job.admin.core.robot.ReportRobot;
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.service.WXTemplateService;
+import com.xxl.job.admin.service.impl.WXTemplateServiceImpl;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
@@ -106,6 +110,7 @@ public class XxlJobTrigger {
         jobLog.setJobId(jobInfo.getId());
         jobLog.setTriggerTime(new Date());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().save(jobLog);
+
         logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
         // 2、init trigger-param
@@ -180,7 +185,13 @@ public class XxlJobTrigger {
         jobLog.setTriggerMsg(triggerMsgSb.toString());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(jobLog);
 
+
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
+        System.out.println(triggerResult.getMsg());
+        if (jobLog.getHandleCode()!=200){
+            //发送到企业微信
+            new ReportRobot(jobLog).sendMDText(triggerResult.getMsg());
+        }
     }
 
     /**
